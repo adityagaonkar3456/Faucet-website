@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdrawal</title>
+</head>
+
+<body>
+
+  <h1>💸 Withdrawal</h1>
+
+  <nav>
+    <a href="index.html">🏠 Home</a> |
+    <a href="faucet.html">🚰 Faucet</a> |
+    <a href="withdrawal.html">💸 Withdrawal</a> |
+    <a href="exchange.html">🔄 Exchange</a>
+  </nav>
+
+  <hr>
+
+  <h2>Testnet Withdrawal</h2>
+
+  <p>Available Balance: <strong>0 TEST</strong></p>
+
+  <label>Wallet Address</label><br>
+  <input
+    type="text"
+    id="wallet"
+    placeholder="0x..."
+    style="width:280px;padding:10px;"
+  >
+
+  <br><br>
+
+  <label>Amount</label><br>
+  <input
+    type="number"
+    id="amount"
+    placeholder="0"
+    style="width:280px;padding:10px;"
+  >
+
+  <br><br>
+
+  <button onclick="requestWithdrawal()">
+    Request Withdrawal
+  </button>
+
+  <p id="message"></p>
+
+  <script>
+    function requestWithdrawal() {
+      const wallet = document.getElementById("wallet").value.trim();
+      const amount = document.getElementById("amount").value;
+
+      if (!wallet || !amount) {
+        document.getElementById("message").textContent =
+          "Please enter wallet address and amount.";
+        return;
+      }
+
+      document.getElementById("message").textContent =
+        "Demo withdrawal request created. Backend will be connected later.";
+    }
+  </script>
+
+</body>
+</html>
