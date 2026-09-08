@@ -1,9 +1,48 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Faucet</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      background: #f4f7fb;
+    }
+
+    nav {
+      margin: 20px 0;
+    }
+
+    nav a {
+      margin: 5px;
+    }
+
+    .card {
+      max-width: 500px;
+      margin: auto;
+      padding: 25px;
+      background: white;
+      border-radius: 15px;
+    }
+
+    button {
+      padding: 12px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #walletAddress {
+      word-break: break-all;
+    }
+  </style>
 </head>
 
 <body>
@@ -17,21 +56,80 @@
     <a href="exchange.html">🔄 Exchange</a>
   </nav>
 
-  <hr>
+  <div class="card">
 
-  <h2>Claim Testnet Tokens</h2>
+    <h2>Claim Testnet Tokens</h2>
 
-  <p>Network: Ethereum Sepolia Testnet</p>
+    <p>Network: Ethereum Sepolia Testnet</p>
 
-  <button id="claimButton">Claim Testnet Reward</button>
+    <button id="connectWallet">
+      🔗 Connect Wallet
+    </button>
 
-  <p id="message"></p>
+    <p id="walletAddress">
+      Wallet not connected
+    </p>
+
+    <hr>
+
+    <button id="claimButton">
+      🚰 Claim Testnet Reward
+    </button>
+
+    <p id="message"></p>
+
+  </div>
 
   <script>
-    document.getElementById("claimButton").onclick = function () {
-      document.getElementById("message").textContent =
-        "Demo claim created. Blockchain connection will be added next.";
+
+    let connectedWallet = null;
+
+    // Connect wallet
+    document.getElementById("connectWallet").onclick = async function () {
+
+      if (!window.ethereum) {
+        document.getElementById("walletAddress").textContent =
+          "Compatible Web3 wallet not detected.";
+        return;
+      }
+
+      try {
+
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts"
+        });
+
+        connectedWallet = accounts[0];
+
+        document.getElementById("walletAddress").textContent =
+          "Connected: " + connectedWallet;
+
+      } catch (error) {
+
+        document.getElementById("walletAddress").textContent =
+          "Wallet connection cancelled.";
+
+      }
     };
+
+
+    // Demo faucet claim
+    document.getElementById("claimButton").onclick = function () {
+
+      if (!connectedWallet) {
+
+        document.getElementById("message").textContent =
+          "Please connect your wallet first.";
+
+        return;
+      }
+
+      document.getElementById("message").textContent =
+        "Demo claim created for " + connectedWallet +
+        ". Secure backend payout will be added later.";
+
+    };
+
   </script>
 
 </body>
