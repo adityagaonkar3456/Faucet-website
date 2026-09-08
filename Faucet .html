@@ -80,57 +80,70 @@
 
   </div>
 
-  <script>
+  
+<script>
+  let connectedWallet = null;
 
-    let connectedWallet = null;
+  const SEPOLIA_CHAIN_ID = "0xaa36a7";
 
-    // Connect wallet
-    document.getElementById("connectWallet").onclick = async function () {
+  async function connectWallet() {
 
-      if (!window.ethereum) {
+    if (!window.ethereum) {
+      document.getElementById("walletAddress").textContent =
+        "Compatible Web3 wallet not detected.";
+      return;
+    }
+
+    try {
+
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts"
+      });
+
+      connectedWallet = accounts[0];
+
+      const chainId = await window.ethereum.request({
+        method: "eth_chainId"
+      });
+
+      if (chainId !== SEPOLIA_CHAIN_ID) {
+
         document.getElementById("walletAddress").textContent =
-          "Compatible Web3 wallet not detected.";
+          "⚠️ Please switch to Ethereum Sepolia Testnet.";
+
         return;
       }
 
-      try {
+      document.getElementById("walletAddress").textContent =
+        "✅ Connected: " + connectedWallet;
 
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts"
-        });
+    } catch (error) {
 
-        connectedWallet = accounts[0];
+      document.getElementById("walletAddress").textContent =
+        "Wallet connection cancelled.";
 
-        document.getElementById("walletAddress").textContent =
-          "Connected: " + connectedWallet;
-
-      } catch (error) {
-
-        document.getElementById("walletAddress").textContent =
-          "Wallet connection cancelled.";
-
-      }
-    };
+    }
+  }
 
 
-    // Demo faucet claim
-    document.getElementById("claimButton").onclick = function () {
+  document.getElementById("connectWallet").onclick =
+    connectWallet;
 
-      if (!connectedWallet) {
 
-        document.getElementById("message").textContent =
-          "Please connect your wallet first.";
+  document.getElementById("claimButton").onclick = function () {
 
-        return;
-      }
+    if (!connectedWallet) {
 
       document.getElementById("message").textContent =
-        "Demo claim created for " + connectedWallet +
-        ". Secure backend payout will be added later.";
+        "Please connect your wallet first.";
 
-    };
+      return;
+    }
 
-  </script>
+    document.getElementById("message").textContent =
+      "Wallet verified on Sepolia. Faucet backend will be connected next.";
 
+  };
+</script>
 </body>
 </html>
