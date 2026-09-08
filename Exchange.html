@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exchange</title>
+</head>
+
+<body>
+
+  <h1>🔄 Exchange</h1>
+
+  <nav>
+    <a href="index.html">🏠 Home</a> |
+    <a href="faucet.html">🚰 Faucet</a> |
+    <a href="withdrawal.html">💸 Withdrawal</a> |
+    <a href="exchange.html">🔄 Exchange</a>
+  </nav>
+
+  <hr>
+
+  <h2>Token Exchange</h2>
+
+  <p>Current Balance: <strong>0 TEST</strong></p>
+
+  <label>Amount</label><br>
+  <input
+    type="number"
+    id="amount"
+    placeholder="Enter amount"
+    style="width:280px;padding:10px;"
+  >
+
+  <br><br>
+
+  <button onclick="calculate()">
+    Calculate
+  </button>
+
+  <p id="result"></p>
+
+  <script>
+    function calculate() {
+      const amount = Number(document.getElementById("amount").value);
+
+      if (amount <= 0) {
+        document.getElementById("result").textContent =
+          "Enter a valid amount.";
+        return;
+      }
+
+      document.getElementById("result").textContent =
+        "Demo exchange calculation: " + amount + " TEST";
+    }
+  </script>
+
+</body>
+</html>
