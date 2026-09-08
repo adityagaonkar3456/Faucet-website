@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faucet</title>
+</head>
+
+<body>
+
+  <h1>🚰 Blockchain Faucet</h1>
+
+  <nav>
+    <a href="index.html">🏠 Home</a> |
+    <a href="faucet.html">🚰 Faucet</a> |
+    <a href="withdrawal.html">💸 Withdrawal</a> |
+    <a href="exchange.html">🔄 Exchange</a>
+  </nav>
+
+  <hr>
+
+  <h2>Claim Testnet Tokens</h2>
+
+  <p>Network: Ethereum Sepolia Testnet</p>
+
+  <button id="claimButton">Claim Testnet Reward</button>
+
+  <p id="message"></p>
+
+  <script>
+    document.getElementById("claimButton").onclick = function () {
+      document.getElementById("message").textContent =
+        "Demo claim created. Blockchain connection will be added next.";
+    };
+  </script>
+
+</body>
+</html>
