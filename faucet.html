@@ -163,15 +163,14 @@
 
       }
 
-    } catch (error) {
+        } catch (error) {
 
       console.error(error);
 
       message.textContent =
-        "❌ Unable to connect to faucet API.";
+        "❌ " + error.name + ": " + error.message;
 
     }
-
   }
 
 
