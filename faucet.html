@@ -30,6 +30,15 @@
       border-radius: 15px;
     }
 
+    input {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
     button {
       padding: 12px 20px;
       margin: 10px;
@@ -39,13 +48,10 @@
       font-size: 16px;
     }
 
-    #walletAddress {
-      word-break: break-all;
-    }
-
     #message {
       margin-top: 15px;
       font-weight: bold;
+      word-break: break-word;
     }
   </style>
 </head>
@@ -67,15 +73,14 @@
 
     <p>Network: Ethereum Sepolia Testnet</p>
 
-    <button id="connectWallet">
-      🔗 Connect Wallet
-    </button>
+    <input
+      id="walletAddress"
+      type="text"
+      placeholder="Enter Sepolia wallet address"
+      autocomplete="off"
+    >
 
-    <p id="walletAddress">
-      Wallet not connected
-    </p>
-
-    <hr>
+    <br>
 
     <button id="claimButton">
       🚰 Claim Testnet Reward
@@ -86,62 +91,33 @@
   </div>
 
 <script>
-  let connectedWallet = null;
-
-  const SEPOLIA_CHAIN_ID = "0xaa36a7";
 
   const API_URL =
     "https://blockchain-faucet-api.adityagaonkar3456.workers.dev";
 
+  const walletInput =
+    document.getElementById("walletAddress");
 
-  async function connectWallet() {
+  const message =
+    document.getElementById("message");
 
-    if (!window.ethereum) {
-      document.getElementById("walletAddress").textContent =
-        "Compatible Web3 wallet not detected.";
-      return;
-    }
 
-    try {
+  function isValidEthereumAddress(address) {
 
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts"
-      });
+    return /^0x[a-fA-F0-9]{40}$/.test(address);
 
-      connectedWallet = accounts[0];
-
-      const chainId = await window.ethereum.request({
-        method: "eth_chainId"
-      });
-
-      if (chainId !== SEPOLIA_CHAIN_ID) {
-
-        document.getElementById("walletAddress").textContent =
-          "⚠️ Please switch to Ethereum Sepolia Testnet.";
-
-        connectedWallet = null;
-        return;
-      }
-
-      document.getElementById("walletAddress").textContent =
-        "✅ Connected: " + connectedWallet;
-
-    } catch (error) {
-
-      document.getElementById("walletAddress").textContent =
-        "Wallet connection cancelled.";
-    }
   }
 
 
   async function claimFaucet() {
 
-    const message = document.getElementById("message");
+    const wallet =
+      walletInput.value.trim();
 
-    if (!connectedWallet) {
+    if (!isValidEthereumAddress(wallet)) {
 
       message.textContent =
-        "⚠️ Please connect your wallet first.";
+        "⚠️ Enter a valid Ethereum wallet address.";
 
       return;
     }
@@ -161,24 +137,30 @@
           },
 
           body: JSON.stringify({
-            wallet: connectedWallet
+            wallet: wallet
           })
         }
       );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       if (data.success) {
 
         message.textContent =
-          "✅ " + data.message +
-          " | Reward: " + data.reward +
-          " | Status: " + data.status;
+          "✅ " +
+          data.message +
+          " | Reward: " +
+          data.reward +
+          " | Status: " +
+          data.status;
 
       } else {
 
         message.textContent =
-          "❌ " + (data.error || "Claim failed.");
+          "❌ " +
+          (data.error || "Claim failed.");
+
       }
 
     } catch (error) {
@@ -187,17 +169,17 @@
 
       message.textContent =
         "❌ Unable to connect to faucet API.";
+
     }
+
   }
 
 
-  document.getElementById("connectWallet").onclick =
-    connectWallet;
-
-  document.getElementById("claimButton").onclick =
-    claimFaucet;
+  document
+    .getElementById("claimButton")
+    .addEventListener("click", claimFaucet);
 
 </script>
 
 </body>
-  </html>
+</html>
