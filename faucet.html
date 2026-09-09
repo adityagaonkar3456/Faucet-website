@@ -135,64 +135,26 @@
           headers: {
   "Content-Type": "text/plain"
 },
-          body: JSON.stringify({
-            wallet: wallet
-          })
-        }
-      );
+<script>
+  const API_URL =
+    "https://blockchain-faucet-api.adityagaonkar3456.workers.dev";
 
-      const data =
-        await response.json();
+  const walletInput =
+    document.getElementById("walletAddress");
 
-      if (data.success) {
+  const message =
+    document.getElementById("message");
 
-        message.textContent =
-          "✅ " +
-          data.message +
-          " | Reward: " +
-          data.reward +
-          " | Status: " +
-          data.status;
-
-      } else {
-
-        message.textContent =
-          "❌ " +
-          (data.error || "Claim failed.");
-
-      }
-
-    } catch (error) {
-
-      console.error(error);
-
-      message.textContent =
-        "❌ " + error.name + ": " + error.message;
-
-    }
-
+  function isValidEthereumAddress(address) {
+    return /^0x[a-fA-F0-9]{40}$/.test(address);
   }
-
-
-  document
-    .getElementById("claimButton")
-    .addEventListener("click", claimFaucet);
-
-</script>
-
-  }
-
 
   async function claimFaucet() {
-
-    const wallet =
-      walletInput.value.trim();
+    const wallet = walletInput.value.trim();
 
     if (!isValidEthereumAddress(wallet)) {
-
       message.textContent =
         "⚠️ Enter a valid Ethereum wallet address.";
-
       return;
     }
 
@@ -200,14 +162,13 @@
       "⏳ Sending claim request...";
 
     try {
-
       const response = await fetch(
         API_URL + "/api/faucet/claim",
         {
           method: "POST",
 
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "text/plain"
           },
 
           body: JSON.stringify({
@@ -216,11 +177,9 @@
         }
       );
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       if (data.success) {
-
         message.textContent =
           "✅ " +
           data.message +
@@ -228,30 +187,23 @@
           data.reward +
           " | Status: " +
           data.status;
-
       } else {
-
         message.textContent =
           "❌ " +
           (data.error || "Claim failed.");
-
       }
 
-        } catch (error) {
-
+    } catch (error) {
       console.error(error);
 
       message.textContent =
         "❌ " + error.name + ": " + error.message;
-
     }
   }
-
 
   document
     .getElementById("claimButton")
     .addEventListener("click", claimFaucet);
-
 </script>
 
 </body>
