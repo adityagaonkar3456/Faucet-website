@@ -137,18 +137,25 @@
       try {
 
         const response = await fetch(
-          API_URL + "/api/faucet/claim",
-          {
-            method: "POST",
+  API_URL + "/api/faucet/claim-demo?wallet=" +
+  encodeURIComponent(wallet)
+);
 
-            headers: {
-  "Content-Type": "application/json"
-},
-            body: JSON.stringify({
-              wallet: wallet
-            })
-          }
-        );
+const data = await response.json();
+
+if (data.success) {
+  message.textContent =
+    "✅ " +
+    data.message +
+    " | Reward: " +
+    data.reward +
+    " | Status: " +
+    data.status;
+} else {
+  message.textContent =
+    "❌ " +
+    (data.error || "Claim failed.");
+}
 
 
         const data =
