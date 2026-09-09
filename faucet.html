@@ -163,6 +163,81 @@
 
       }
 
+    } catch (error) {
+
+      console.error(error);
+
+      message.textContent =
+        "❌ " + error.name + ": " + error.message;
+
+    }
+
+  }
+
+
+  document
+    .getElementById("claimButton")
+    .addEventListener("click", claimFaucet);
+
+</script>
+
+  }
+
+
+  async function claimFaucet() {
+
+    const wallet =
+      walletInput.value.trim();
+
+    if (!isValidEthereumAddress(wallet)) {
+
+      message.textContent =
+        "⚠️ Enter a valid Ethereum wallet address.";
+
+      return;
+    }
+
+    message.textContent =
+      "⏳ Sending claim request...";
+
+    try {
+
+      const response = await fetch(
+        API_URL + "/api/faucet/claim",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            wallet: wallet
+          })
+        }
+      );
+
+      const data =
+        await response.json();
+
+      if (data.success) {
+
+        message.textContent =
+          "✅ " +
+          data.message +
+          " | Reward: " +
+          data.reward +
+          " | Status: " +
+          data.status;
+
+      } else {
+
+        message.textContent =
+          "❌ " +
+          (data.error || "Claim failed.");
+
+      }
+
         } catch (error) {
 
       console.error(error);
