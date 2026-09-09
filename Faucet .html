@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,10 +36,16 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      font-size: 16px;
     }
 
     #walletAddress {
       word-break: break-all;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -80,11 +85,14 @@
 
   </div>
 
-  
 <script>
   let connectedWallet = null;
 
   const SEPOLIA_CHAIN_ID = "0xaa36a7";
+
+  const API_URL =
+    "https://blockchain-faucet-api.adityagaonkar3456.workers.dev";
+
 
   async function connectWallet() {
 
@@ -111,6 +119,7 @@
         document.getElementById("walletAddress").textContent =
           "⚠️ Please switch to Ethereum Sepolia Testnet.";
 
+        connectedWallet = null;
         return;
       }
 
@@ -121,7 +130,63 @@
 
       document.getElementById("walletAddress").textContent =
         "Wallet connection cancelled.";
+    }
+  }
 
+
+  async function claimFaucet() {
+
+    const message = document.getElementById("message");
+
+    if (!connectedWallet) {
+
+      message.textContent =
+        "⚠️ Please connect your wallet first.";
+
+      return;
+    }
+
+    message.textContent =
+      "⏳ Sending claim request...";
+
+    try {
+
+      const response = await fetch(
+        API_URL + "/api/faucet/claim",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            wallet: connectedWallet
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+
+        message.textContent =
+          "✅ " + data.message +
+          " | Reward: " + data.reward +
+          " | Status: " + data.status;
+
+      } else {
+
+        message.textContent =
+          "❌ " + (data.error || "Claim failed.");
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+      message.textContent =
+        "❌ Unable to connect to faucet API.";
     }
   }
 
@@ -129,21 +194,10 @@
   document.getElementById("connectWallet").onclick =
     connectWallet;
 
+  document.getElementById("claimButton").onclick =
+    claimFaucet;
 
-  document.getElementById("claimButton").onclick = function () {
-
-    if (!connectedWallet) {
-
-      document.getElementById("message").textContent =
-        "Please connect your wallet first.";
-
-      return;
-    }
-
-    document.getElementById("message").textContent =
-      "Wallet verified on Sepolia. Faucet backend will be connected next.";
-
-  };
 </script>
+
 </body>
-</html>
+  </html>
