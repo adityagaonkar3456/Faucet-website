@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,6 +30,7 @@
       padding: 25px;
       background: white;
       border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
 
     input {
@@ -131,31 +133,18 @@
 
 
       message.textContent =
-        "⏳ Sending claim request...";
+        "⏳ Processing claim...";
+
+      claimButton.disabled = true;
 
 
       try {
 
         const response = await fetch(
-  API_URL + "/api/faucet/claim-demo?wallet=" +
-  encodeURIComponent(wallet)
-);
-
-const data = await response.json();
-
-if (data.success) {
-  message.textContent =
-    "✅ " +
-    data.message +
-    " | Reward: " +
-    data.reward +
-    " | Status: " +
-    data.status;
-} else {
-  message.textContent =
-    "❌ " +
-    (data.error || "Claim failed.");
-}
+          API_URL +
+          "/api/faucet/claim-demo?wallet=" +
+          encodeURIComponent(wallet)
+        );
 
 
         const data =
@@ -192,6 +181,9 @@ if (data.success) {
           error.message;
 
       }
+
+
+      claimButton.disabled = false;
 
     }
 
